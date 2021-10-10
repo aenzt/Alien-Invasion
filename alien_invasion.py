@@ -38,6 +38,8 @@ class AlienInvasion:
 
         #Make the play button
         self.play_button = Button(self, "Play")
+        self.text_color = (30, 30, 30)
+        self.font = pygame.font.SysFont(None, 48)
 
 
     def run_game(self):
@@ -106,6 +108,10 @@ class AlienInvasion:
             self.ship.moving_right = False
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False;
+
+    def game_over_text(self):
+        self.over_text = self.font.render("GAME OVER", True, (255, 255, 255))
+        self.screen.blit(self.over_text, (200, 250))
     
     def _fire_bullet(self):
         """Create a new bullet and add it to the bullets group."""
@@ -183,6 +189,7 @@ class AlienInvasion:
         else:
             self.stats.game_active = False
             pygame.mouse.set_visible(True)
+        print(self.stats.ships_left)
 
     def _create_fleet(self):
         """Create the fleet of aliens."""
@@ -227,6 +234,8 @@ class AlienInvasion:
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
+        self.background = pygame.Surface((700,500))
+        self.over_text = self.font.render("GAME OVER", True, (255, 255, 255))
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
@@ -238,6 +247,8 @@ class AlienInvasion:
         #Draw the play button if the game is inactive
         if not self.stats.game_active:
             self.play_button.draw_button()
+            self.game_over_text()
+            self.aliens.clear(self.screen, self.background)
 
         pygame.display.flip()
     
